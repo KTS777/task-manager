@@ -2,55 +2,60 @@ import { useState } from "react";
 import styled from "styled-components";
 import { createTask } from "../api";
 
-const FormContainer = styled.div`
+const FormContainer = styled.form`
   background: ${({ theme }) => theme.primary};
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  max-width: 600px;
+  gap: 12px;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 12px;
-  border: 1px solid ${({ theme }) => theme.text};
-  border-radius: 6px;
+  padding: 14px;
+  border: 2px solid ${({ theme }) => theme.text};
+  margin-bottom: 10px;
+  border-radius: 8px;
   font-size: 16px;
   background: ${({ theme }) => theme.secondary};
   color: ${({ theme }) => theme.text};
+  box-sizing: border-box;
 
   &:focus {
-    outline: 2px solid ${({ theme }) => theme.accent};
+    outline: 3px solid ${({ theme }) => theme.accent};
   }
 `;
 
 const Select = styled.select`
   width: 100%;
-  padding: 12px;
-  border: 1px solid ${({ theme }) => theme.text};
-  border-radius: 6px;
+  padding: 14px;
+  margin-bottom: 10px;
+  border: 2px solid ${({ theme }) => theme.text};
+  border-radius: 8px;
   font-size: 16px;
   background: ${({ theme }) => theme.secondary};
   color: ${({ theme }) => theme.text};
+  box-sizing: border-box;
 `;
 
 const SubmitButton = styled.button`
+  align-self: flex-start;
   background: ${({ theme }) => theme.buttonBg};
   color: white;
-  padding: 10px 15px;
+  padding: 12px 20px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
   font-weight: bold;
-  transition: 0.2s ease;
+  transition: 0.3s ease;
 
   &:hover {
     background: ${({ theme }) => theme.accent};
+    transform: scale(1.05);
   }
 `;
 

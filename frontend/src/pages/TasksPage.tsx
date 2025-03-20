@@ -5,9 +5,8 @@ import TaskForm from "../components/TaskForm";
 import TaskItem from "../components/TaskItem";
 
 const Container = styled.div`
-  padding: 20px;
-  margin-left: 260px;
-  max-width: 800px;
+  padding: 40px;
+  max-width: 900px;
   margin: auto;
 `;
 
