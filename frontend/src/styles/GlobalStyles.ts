@@ -1,23 +1,27 @@
-// src/styles/GlobalStyles.ts
 import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyles = createGlobalStyle`
-  :root {
-    --primary-color: ${(props) => props.theme.primary};
-    --background-color: ${(props) => props.theme.background};
-    --text-color: ${(props) => props.theme.text};
-  }
-
-  * {
+  body {
+    background: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.text};
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
   }
-
-  body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    transition: all 0.3s ease-in-out;
+  
+  button {
+    background: ${({ theme }) => theme.buttonBg};
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s ease;
+    
+    &:hover {
+      background: ${({ theme }) => theme.accent};
+    }
   }
 `;

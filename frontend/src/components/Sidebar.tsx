@@ -9,20 +9,19 @@ const SidebarContainer = styled.div`
   position: fixed;
   left: 0;
   top: 0;
-  transition: all 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
   box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
-  border-right: 3px solid ${({ theme }) => theme.border}; /* Soft pastel border */
+  border-right: 3px solid ${({ theme }) => theme.border};
 `;
 
-const SidebarItem = styled(Link)<{ $active: boolean }>`
+const SidebarItem = styled(Link)<{ isActive: boolean }>`
   padding: 15px;
   font-size: 18px;
   text-decoration: none;
   color: ${({ theme }) => theme.text};
-  background: ${({ $active, theme }) =>
-    $active ? theme.activeBg : "transparent"};
+  background: ${({ isActive, theme }) =>
+    isActive ? theme.activeBg : "transparent"};
   border-radius: 12px;
   margin-bottom: 10px;
   display: flex;
@@ -40,26 +39,28 @@ const SidebarItem = styled(Link)<{ $active: boolean }>`
 const Title = styled.h2`
   color: ${({ theme }) => theme.text};
   margin-bottom: 20px;
-  font-size: 22px;
-  font-weight: bold;
   text-align: center;
 `;
 
 const Sidebar = () => {
   const location = useLocation();
+  const menuItems = [
+    { path: "/", label: "📋 Tasks" }, // Tasks page is now the home page
+    { path: "/settings", label: "⚙️ Settings" },
+  ];
 
   return (
     <SidebarContainer>
       <Title>🌸 Task Manager</Title>
-      <SidebarItem to="/" $active={location.pathname === "/"}>
-        🏠 Dashboard
-      </SidebarItem>
-      <SidebarItem to="/tasks" $active={location.pathname === "/tasks"}>
-        📋 Tasks
-      </SidebarItem>
-      <SidebarItem to="/settings" $active={location.pathname === "/settings"}>
-        ⚙️ Settings
-      </SidebarItem>
+      {menuItems.map((item) => (
+        <SidebarItem
+          key={item.path}
+          to={item.path}
+          isActive={location.pathname === item.path}
+        >
+          {item.label}
+        </SidebarItem>
+      ))}
     </SidebarContainer>
   );
 };
