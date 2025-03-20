@@ -1,20 +1,10 @@
 import { useEffect, useState } from "react";
 import { getTasks, deleteTask, updateTask } from "../api";
-import styled from "styled-components";
 import TaskForm from "../components/TaskForm";
 import TaskItem from "../components/TaskItem";
+import { Container, TaskList, Button } from "../styles/TaskStyles";
 
-const Container = styled.div`
-  padding: 40px;
-  max-width: 900px;
-  margin: auto;
-`;
 
-const TaskList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-`;
 
 export default function TasksPage() {
   const [tasks, setTasks] = useState<
@@ -22,6 +12,7 @@ export default function TasksPage() {
   >([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [showCompleted, setShowCompleted] = useState(false);
 
   useEffect(() => {
     fetchTasks();
@@ -40,16 +31,17 @@ export default function TasksPage() {
     setLoading(false);
   };
 
-  const handleCompleteTask = async (id: number) => {
+  const handleToggleComplete = async (id: number, currentStatus: string) => {
+    const newStatus = currentStatus === "COMPLETED" ? "TODO" : "COMPLETED";
     try {
       await updateTask(id, {
         title: tasks.find((task) => task.id === id)?.title || "",
         description: tasks.find((task) => task.id === id)?.description || "",
-        status: "COMPLETED",
+        status: newStatus,
       });
       fetchTasks();
     } catch (error) {
-      console.error("Failed to complete task", error);
+      console.error("Failed to update task status", error);
     }
   };
 
@@ -64,30 +56,72 @@ export default function TasksPage() {
     }
   };
 
+  const handleEditTask = async (
+    id: number,
+    updatedTask: { title: string; description: string; status: string }
+  ) => {
+    try {
+      await updateTask(id, updatedTask);
+      fetchTasks();
+    } catch (error) {
+      console.error("Failed to update task", error);
+    }
+  };
+
   return (
     <Container>
       <h2>📋 Tasks</h2>
-      {loading && <p>Loading tasks...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {/* 🚀 Create Task Form */}
       <TaskForm onTaskCreated={fetchTasks} />
 
-      {/* 🚀 Task List */}
+      {/* ACTIVE TASKS */}
+      <h3>Active Tasks</h3>
       <TaskList>
-        {tasks.length === 0 && !loading ? <p>No tasks found.</p> : null}
-        {tasks.map((task) => (
-          <TaskItem
-            key={task.id}
-            id={task.id}
-            title={task.title}
-            description={task.description}
-            status={task.status}
-            onComplete={handleCompleteTask}
-            onDelete={handleDelete}
-          />
-        ))}
+        {tasks
+          .filter((task) => task.status !== "COMPLETED")
+          .map((task) => (
+            <TaskItem
+              key={task.id}
+              id={task.id}
+              title={task.title}
+              description={task.description}
+              status={task.status}
+              onTaskUpdated={fetchTasks}
+              onDelete={handleDelete}
+              onToggleComplete={handleToggleComplete}
+              onEditTask={handleEditTask} // ✅ Added edit functionality
+            />
+          ))}
       </TaskList>
+
+      {/* TOGGLE COMPLETED TASKS */}
+      <Button onClick={() => setShowCompleted((prev) => !prev)}>
+        {showCompleted ? "Hide Completed Tasks" : "Show Completed Tasks"}
+      </Button>
+
+      {/* COMPLETED TASKS (Hidden by Default) */}
+      {showCompleted && (
+        <>
+          <h3>✅ Completed Tasks</h3>
+          <TaskList>
+            {tasks
+              .filter((task) => task.status === "COMPLETED")
+              .map((task) => (
+                <TaskItem
+                  key={task.id}
+                  id={task.id}
+                  title={task.title}
+                  description={task.description}
+                  status={task.status}
+                  onTaskUpdated={fetchTasks}
+                  onDelete={handleDelete}
+                  onToggleComplete={handleToggleComplete}
+                  onEditTask={handleEditTask} // ✅ Added edit functionality
+                />
+              ))}
+          </TaskList>
+        </>
+      )}
     </Container>
   );
 }

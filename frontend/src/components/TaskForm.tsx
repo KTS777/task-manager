@@ -1,63 +1,7 @@
 import { useState } from "react";
-import styled from "styled-components";
 import { createTask } from "../api";
+import { FormContainer, InputField, SelectField, TextAreaField, SubmitButton} from "../styles/TaskStyles";
 
-const FormContainer = styled.form`
-  background: ${({ theme }) => theme.primary};
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 14px;
-  border: 2px solid ${({ theme }) => theme.text};
-  margin-bottom: 10px;
-  border-radius: 8px;
-  font-size: 16px;
-  background: ${({ theme }) => theme.secondary};
-  color: ${({ theme }) => theme.text};
-  box-sizing: border-box;
-
-  &:focus {
-    outline: 3px solid ${({ theme }) => theme.accent};
-  }
-`;
-
-const Select = styled.select`
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 10px;
-  border: 2px solid ${({ theme }) => theme.text};
-  border-radius: 8px;
-  font-size: 16px;
-  background: ${({ theme }) => theme.secondary};
-  color: ${({ theme }) => theme.text};
-  box-sizing: border-box;
-`;
-
-const SubmitButton = styled.button`
-  align-self: flex-start;
-  background: ${({ theme }) => theme.buttonBg};
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s ease;
-
-  &:hover {
-    background: ${({ theme }) => theme.accent};
-    transform: scale(1.05);
-  }
-`;
 
 export default function TaskForm({
   onTaskCreated,
@@ -70,7 +14,7 @@ export default function TaskForm({
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // ✅ Prevent page refresh
 
     if (!title.trim() || !description.trim()) {
       setError("Title and description are required.");
@@ -85,7 +29,7 @@ export default function TaskForm({
       setDescription("");
       setStatus("TODO");
       setError(null);
-      onTaskCreated(); // Refresh task list
+      onTaskCreated(); // ✅ Refresh task list
     } catch (error) {
       console.error("Failed to create task:", error);
       setError("Failed to create task. Please try again.");
@@ -97,25 +41,25 @@ export default function TaskForm({
       <h3>Create a New Task</h3>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleSubmit}>
-        <Input
+        <InputField
           type="text"
           placeholder="Task Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
         />
-        <Input
+        <TextAreaField
           type="text"
           placeholder="Task Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
         />
-        <Select value={status} onChange={(e) => setStatus(e.target.value)}>
+        <SelectField value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value="TODO">To Do</option>
           <option value="IN_PROGRESS">In Progress</option>
           <option value="COMPLETED">Completed</option>
-        </Select>
+        </SelectField>
         <SubmitButton type="submit">Add Task</SubmitButton>
       </form>
     </FormContainer>

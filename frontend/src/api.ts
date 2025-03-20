@@ -39,8 +39,6 @@ export const createTask = async (taskData: { title: string; description: string;
 };
 
 
-
-
 // Update a task
 export const updateTask = async (id: number, updatedTask: { title: string; description: string; status: string }) => {
   try {
@@ -51,6 +49,7 @@ export const updateTask = async (id: number, updatedTask: { title: string; descr
     throw error;
   }
 };
+
 
 // Delete a task
 export const deleteTask = async (id: number) => {
